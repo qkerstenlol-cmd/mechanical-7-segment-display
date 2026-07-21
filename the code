@@ -1,0 +1,96 @@
+#include <Wire.h>
+#include <Adafruit_PWMServoDriver.h>
+
+Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
+
+const int SERVO_MIN = 120;
+const int SERVO_MAX = 520;
+
+const int OFF = 0;
+const int ON = 80;
+
+
+void setServo(uint8_t channel, int angle)
+{
+  int pulse = map(angle, 0, 180, SERVO_MIN, SERVO_MAX);
+  pwm.setPWM(channel, 0, pulse);
+}
+
+void segmentA(bool state){ setServo(0, state ? ON : OFF); }
+void segmentB(bool state){ setServo(1, state ? ON : OFF); }
+void segmentC(bool state){ setServo(2, state ? ON : OFF); }
+void segmentD(bool state){ setServo(3, state ? ON : OFF); }
+void segmentE(bool state){ setServo(4, state ? ON : OFF); }
+void segmentF(bool state){ setServo(5, state ? ON : OFF); }
+void segmentG(bool state){ setServo(6, state ? 80 : 150); }
+
+void displayDigit(byte d)
+{
+  switch(d)
+  {
+    case 0:
+      segmentA(1); segmentB(1); segmentC(1); segmentD(1);
+      segmentE(1); segmentF(1); segmentG(0);
+      break;
+
+    case 1:
+      segmentA(0); segmentB(1); segmentC(1); segmentD(0);
+      segmentE(0); segmentF(0); segmentG(0);
+      break;
+
+    case 2:
+      segmentA(1); segmentB(1); segmentC(0); segmentD(1);
+      segmentE(1); segmentF(0); segmentG(1);
+      break;
+
+    case 3:
+      segmentA(1); segmentB(1); segmentC(1); segmentD(1);
+      segmentE(0); segmentF(0); segmentG(1);
+      break;
+
+    case 4:
+      segmentA(0); segmentB(1); segmentC(1); segmentD(0);
+      segmentE(0); segmentF(1); segmentG(1);
+      break;
+
+    case 5:
+      segmentA(1); segmentB(0); segmentC(1); segmentD(1);
+      segmentE(0); segmentF(1); segmentG(1);
+      break;
+
+    case 6:
+      segmentA(1); segmentB(0); segmentC(1); segmentD(1);
+      segmentE(1); segmentF(1); segmentG(1);
+      break;
+
+    case 7:
+      segmentA(1); segmentB(1); segmentC(1); segmentD(0);
+      segmentE(0); segmentF(0); segmentG(0);
+      break;
+
+    case 8:
+      segmentA(1); segmentB(1); segmentC(1); segmentD(1);
+      segmentE(1); segmentF(1); segmentG(1);
+      break;
+
+    case 9:
+      segmentA(1); segmentB(1); segmentC(1); segmentD(1);
+      segmentE(0); segmentF(1); segmentG(1);
+      break;
+  }
+}
+
+void setup()
+{
+  pwm.begin();
+  pwm.setPWMFreq(50);
+}
+
+void loop()
+{
+  for(int i = 0; i <= 9; i++)
+  {
+    displayDigit(i);
+    delay(1000);
+  }
+}
